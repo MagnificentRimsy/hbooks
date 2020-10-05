@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/book.dart';
 import 'package:flutter_app/login.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -33,7 +34,6 @@ class _RegisterPageState extends State<RegisterPage> {
   bool _loading = false;
   bool _autoValidate = false;
   String errorMsg = "";
-  final _auth = FirebaseAuth.instance;
   
 
 
@@ -41,6 +41,98 @@ class _RegisterPageState extends State<RegisterPage> {
   void initState() {
     super.initState();
   }
+
+    //this is the code I want to use but I am having difficulty in applying it because someof the codes are deprecated this function below
+
+    
+    //   void _validateRegisterInput() async {
+    //   final FormState form = _formKey.currentState;
+    //   if (_formKey.currentState.validate()) {
+    //     form.save();
+    //     _sheetController.setState(() {
+    //       _loading = true;
+    //     });
+    //     try {
+    //       //
+            
+    //         User user = await FirebaseAuth.instance
+    //           createUserWithEmailAndPassword(
+    //               email: _email, password: _password);
+
+    //       UserUpdateInfo userUpdateInfo = new UserUpdateInfo();
+
+    //       userUpdateInfo.displayName = _displayName;
+
+    //       user.updateProfile(userUpdateInfo).then((onValue) {
+    //         Navigator.of(context).pushReplacementNamed(BookPage.route);
+    //         FirebaseFirestore.instance.collection('users').doc().set(
+    //             {'email': _email, 'displayName': _displayName}).then((onValue) {
+    //           _sheetController.setState(() {
+    //             _loading = false;
+    //           });
+    //         });
+    //       });
+    //     } catch (error) {
+    //       switch (error.code) {
+    //         case "ERROR_EMAIL_ALREADY_IN_USE":
+    //           {
+    //             _sheetController.setState(() {
+    //               errorMsg = "This email is already in use.";
+    //               _loading = false;
+    //             });
+    //             showDialog(
+    //                 context: context,
+    //                 builder: (BuildContext context) {
+    //                   return AlertDialog(
+    //                     content: Container(
+    //                       child: Text(errorMsg),
+    //                     ),
+    //                   );
+    //                 });
+    //           }
+    //           break;
+    //         case "ERROR_WEAK_PASSWORD":
+    //           {
+    //             _sheetController.setState(() {
+    //               errorMsg = "The password must be 6 characters long or more.";
+    //               _loading = false;
+    //             });
+    //             showDialog(
+    //                 context: context,
+    //                 builder: (BuildContext context) {
+    //                   return AlertDialog(
+    //                     content: Container(
+    //                       child: Text(errorMsg),
+    //                     ),
+    //                   );
+    //                 });
+    //           }
+    //           break;
+    //         default:
+    //           {
+    //             _sheetController.setState(() {
+    //               errorMsg = "";
+    //             });
+    //           }
+    //       }
+    //     }
+    //   } else {
+    //     setState(() {
+    //       _autoValidate = true;
+    //     });
+    //   }
+    // }
+
+    String emailValidator(String value) {
+      Pattern pattern =
+          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+      RegExp regex = new RegExp(pattern);
+      if (value.isEmpty) return '*Required';
+      if (!regex.hasMatch(value))
+        return '*Enter a valid email';
+      else
+        return null;
+    }
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -151,29 +243,38 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(30.0)),
                     padding: EdgeInsets.fromLTRB(120, 20, 120, 20),
                     color: Hexcolor("#043e2a"),
-                    child: Text(
+                    child: _loading
+                            ? CircularProgressIndicator(
+                                valueColor: new AlwaysStoppedAnimation<Color>(
+                                    Colors.green),
+                              )
+                            : 
+                    Text(
                       'Register',
                       style: TextStyle(
                         color: Colors.white,
                       ),
                     ),
                     onPressed: () async {
-                      try {
-                        final newUser =
-                            await _auth.createUserWithEmailAndPassword(
-                                email: _email, password: _password);
-                        if (newUser != null) {
-                          //Do something
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => BookPage(),
-                            ),
-                          );
-                        }
-                      } catch (e) {
-                        print(e);
-                      }
+
+                      //I don't want to use this below. I want to use the method above because I am having a name and confirm password.
+                      // try {
+                      //   final _auth = FirebaseAuth.instance;
+                      //   final newUser =
+                      //       await _auth.createUserWithEmailAndPassword(
+                      //           email: _email, password: _password);
+                      //   if (newUser != null) {
+                      //     //Do something
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => BookPage(),
+                      //       ),
+                      //     );
+                      //   }
+                      // } catch (e) {
+                      //   print(e);
+                      // }
                     },
                   ),
                   SizedBox(height: 20),
