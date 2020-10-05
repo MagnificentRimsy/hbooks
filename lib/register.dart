@@ -14,6 +14,8 @@ void main() {
 }
 
 class RegisterPage extends StatefulWidget {
+  static const String route = 'register_page';
+
   RegisterPage({Key key}) : super(key: key);
 
   @override
@@ -21,23 +23,24 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  PersistentBottomSheetController _sheetController;
+
+  String _displayName;
+  String _email;
+  String _password;
+  bool _loading = false;
+  bool _autoValidate = false;
+  String errorMsg = "";
   final _auth = FirebaseAuth.instance;
   
 
 
-  String name;
-  String email;
-  String password;
-
-
   @override
-  // void initState() {
-  //   super.initState();
-  //   Firebase.initializeApp().whenComplete(() {
-  //     print("completed");
-  //     setState(() {});
-  //   });
-  // }
+  void initState() {
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   Hero(
                     tag: 'logo',
                     child: Image.asset(
-                      "assets/images/logo.png",
+                      "assets/images/logo_h.png",
                       height: 120.0,
                       width: 120.0,
                     ),
@@ -73,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       onChanged: (value) {
-                        name = value;
+                        _displayName = value;
                       },
                     ),
                   ),
@@ -95,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       onChanged: (value) {
-                        email = value;
+                        _email = value;
                       },
                     ),
                   ),
@@ -118,7 +121,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ),
                       onChanged: (value) {
-                        password = value;
+                        _password = value;
                       },
                     ),
                   ),
@@ -158,7 +161,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       try {
                         final newUser =
                             await _auth.createUserWithEmailAndPassword(
-                                email: email, password: password);
+                                email: _email, password: _password);
                         if (newUser != null) {
                           //Do something
                           Navigator.push(

@@ -14,7 +14,8 @@ void main() {
 }
 
 class LoginPage extends StatefulWidget {
-  static const String id = 'login_screen';
+  static const String route = 'login_screen';
+  
   LoginPage({Key key}) : super(key: key);
 
   @override

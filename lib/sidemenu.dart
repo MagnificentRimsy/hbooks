@@ -26,7 +26,7 @@ class _SideMenuState extends State<SideMenu> {
             child: Column(
               children: [
                 Image.asset(
-                  "assets/images/logo_w.png",
+                  "assets/images/logo_h.jpg",
                   height: 100.0,
                   width: 150.0,
                 ),
@@ -52,11 +52,11 @@ class _SideMenuState extends State<SideMenu> {
             onTap: () {
               _auth.signOut();
                Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LoginPage(),
+                        ),
+              );
             },
           ),
         ],

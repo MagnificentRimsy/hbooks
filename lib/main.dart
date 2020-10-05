@@ -16,9 +16,10 @@ void main() async {
     initialRoute: BookPage.route,
     routes: {
       BookPage.route : (context) => BookPage(),
-      '/login' : (context) => LoginPage(),
-      '/register' : (context) => RegisterPage(),
-      //'/bookdetails' : (context) => DetailsPage(),
+      LoginPage.route : (context) => LoginPage(),
+      RegisterPage.route : (context) => RegisterPage(),
+      //Note: I also want to do the same thing above below but it is requires a parameter so I don't know how to do it.
+      //'/bookdetails' : (context) => DetailsPage() 
     },
   ));
 }
